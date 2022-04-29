@@ -1,0 +1,56 @@
+var response;
+var event;
+var selected;
+ 
+document.onreadystatechange = function(){
+    if(document.readyState == "complete"){
+        pegar_Planetas();
+
+        document.querySelector('#planetas').onchange = mostrar_planeta;
+    }
+}
+
+function pegar_Planetas(){
+    var httpRequest = new XMLHttpRequest();
+
+    httpRequest.onreadystatechange = function(){
+        if(httpRequest.readyState === 4){
+            if(httpRequest.status === 200){
+                response = JSON.parse(httpRequest.responseText);
+
+                var lista = document.querySelector('#planetas');
+                lista.innerHTML == ""
+
+                    response.results.forEach(function(el) {
+                    option = document.createElement("option");      
+                    option.innerHTML =  el.climate;
+                    option.setAttribute('name', JSON.stringify(el.name))
+                    lista.appendChild(option);
+                });
+
+                
+            }   
+        }
+    }
+
+    httpRequest.open('GET', 'https://swapi.dev/api/planets/?page=2');
+    httpRequest.send();
+}   
+
+function mostrar_planeta(ev){
+    selected = ev.target;
+    nome = JSON.parse(selected.selectedOptions[0].getAttribute('name'));
+    
+    
+    console.log(selected);
+    var lista = document.querySelector("#nome")
+    lista.innerHTML = ""
+    
+    li = document.createElement("li");
+    li.innerHTML = nome;
+    lista.appendChild(li);
+
+}
+        
+
+  
